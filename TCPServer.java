@@ -79,6 +79,12 @@ public class ClientHandler extends Thread {
     }
 
     private String processRequest(String msg) {
+        // Uncomment the following line to simulate a slow server to test FIFO ordering of requests
+        // try {
+        //     Thread.sleep(5000);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
         String response = "";
         String[] parts = msg.split(" ");
         String req = parts[0];
