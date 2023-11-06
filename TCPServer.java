@@ -9,6 +9,7 @@ public class Server {
 
     // lock
     private static ReentrantLock lock = null;
+
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
 
@@ -37,14 +38,14 @@ public class Server {
     }
 }
 
-class ClientHandler extends Thread {
+public class ClientHandler extends Thread {
     private final Socket clientSocket;
     // lock
     private static ReentrantLock lock = null;
 
     public ClientHandler(Socket socket, ReentrantLock lock) {
         this.clientSocket = socket;
-        this.lock = lock;
+        ClientHandler.lock = lock;
     }
 
     @Override
@@ -61,8 +62,10 @@ class ClientHandler extends Thread {
                 } else {
                     lock.lock();
                     try {
+                        System.out.println("Received message: " + msg);
                         String response = processRequest(msg);
                         output.println(response);
+                        System.out.println("Sent response: " + response);
                     } finally {
                         lock.unlock();
                     }
@@ -82,33 +85,35 @@ class ClientHandler extends Thread {
 
         if (req.equals("put")) {
             if (parts.length >= 3) {
-                int key = Integer.parseInt(parts[1]);
+                String key = parts[1];
                 String value = parts[2];
 
                 try {
                     // Open the file for reading as well as writing
-                    RandomAccessFile file = new RandomAccessFile("data.txt", "rw");
+                    RandomAccessFile file = new RandomAccessFile("database.txt", "rw");
                     String line;
                     boolean found = false;
                     while ((line = file.readLine()) != null) {
+                        if (line.startsWith(" ")) {
+                            continue;
+                        }
                         String[] lineParts = line.split(" ");
-                        int lineKey = Integer.parseInt(lineParts[0]);
-                        if (lineKey == key) {
+                        String lineKey = lineParts[0];
+                        if (lineKey.equals(key)) {
                             found = true;
                             break;
                         }
                     }
                     if (found) {
-                        // Update the value
+                        // Delte the value
                         file.seek(file.getFilePointer() - line.length() - 1);
-                        file.writeBytes(key + " " + value + "\n");
-                        response = "Updated value for key " + key;
-                    } else {
-                        // Append the new key-value pair
-                        file.seek(file.length());
-                        file.writeBytes(key + " " + value + "\n");
-                        response = "Added new key-value pair";
+                        file.writeBytes(" ");
                     }
+                    // Append the new key-value pair
+                    file.seek(file.length());
+                    file.writeBytes(key + " " + value + "\n");
+                    response = "Added new key-value pair";
+
                     file.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -117,8 +122,67 @@ class ClientHandler extends Thread {
             } else {
                 response = "Invalid request";
             }
+        } else if (req.equals("get")) {
+            try {
+                // Open the file for reading
+                RandomAccessFile file = new RandomAccessFile("database.txt", "r");
+                String line;
+                boolean found = false;
+                while ((line = file.readLine()) != null) {
+                    if (line.startsWith(" ")) {
+                        continue;
+                    }
+                    String[] lineParts = line.split(" ");
+                    String lineKey = lineParts[0];
+                    String lineValue = lineParts[1];
+                    if (lineKey.equals(parts[1])) {
+                        found = true;
+                        response = lineValue;
+                        break;
+                    }
+                }
+                if (!found) {
+                    response = "Key not found";
+                }
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                response = "Error while processing request";
+            }
+        } else if (req.equals("del")) {
+            try {
+                // Open the file for reading as well as writing
+                RandomAccessFile file = new RandomAccessFile("database.txt", "rw");
+                String line;
+                boolean found = false;
+                while ((line = file.readLine()) != null) {
+                    if (line.startsWith(" ")) {
+                        continue;
+                    }
+                    String[] lineParts = line.split(" ");
+                    String lineKey = lineParts[0];
+                    if (lineKey.equals(parts[1])) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    // Update the value
+                    file.seek(file.getFilePointer() - line.length() - 1);
+                    // Mark the line as deleted
+                    file.writeBytes(" ");
+                    response = "Deleted key " + parts[1];
+                } else {
+                    response = "Key not found";
+                }
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                response = "Error while processing request";
+            }
+        } else {
+            response = "Invalid request";
         }
-
         return response;
     }
 }
