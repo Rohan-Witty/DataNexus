@@ -122,6 +122,38 @@ int main()
                             sprintf(msg, "Not found key %d\n", key);
                         }
                     }
+                    else if (strcmp(req, "del") == 0)
+                    {
+                        FILE *fp = fopen("database.txt", "r");
+                        char localBuf[BUFFERSIZE];
+                        int got = 0;
+                        while (fgets(localBuf, sizeof(localBuf), fp) != NULL)
+                        {
+                            int curKey = atoi(strtok(localBuf, " \n"));
+                            buf = strtok(NULL, " \n");
+                            if (curKey == key)
+                            {
+                                got = 1;
+                                break;
+                            }
+                        }
+                        if (!got)
+                        {
+                            sprintf(msg, "Not found key %d\n", key);
+                        }
+                        else
+                        {
+                            // Rewind to beginning of line and put the value to as -1
+                            fseek(fp, -strlen(buf) - 1, SEEK_CUR);
+                            fprintf(fp, "-1\n");
+                            sprintf(msg, "OK");
+                        }
+                        fclose(fp);
+                    }
+                    else
+                    {
+                        sprintf(msg, "Invalid request");
+                    }
                     send(newSocket, msg, strlen(msg) + 1, 0);
                     bzero(msg, sizeof(msg));
                 }
