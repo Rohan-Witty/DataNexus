@@ -1,5 +1,5 @@
   aang
-0 an
+  an
   annn
   an
   apple
@@ -7,3 +7,5 @@
   bat
   car
 1 bus
+  100
+0 aang

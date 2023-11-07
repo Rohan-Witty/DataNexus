@@ -3,77 +3,73 @@ import java.net.*;
 import java.util.StringTokenizer;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class TCPServer {
+public class UDPServer {
     private static final int BUFFERSIZE = 1024;
     private static final int MAXPENDING = 10;
 
     // lock
     private static ReentrantLock lock = null;
+    private static DatagramSocket serverSocket = null;
+
+    private static boolean connected = true;
+
+    public static void close() {
+        connected = false;
+    }
 
     public static void main(String[] args) {
-        ServerSocket serverSocket = null;
-
         try {
-            serverSocket = new ServerSocket(12345); // Port number can be changed
-            System.out.println("Server Socket Created");
-            lock = new ReentrantLock(true);
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Client connected: " + clientSocket);
-
-                ClientHandler clientThread = new ClientHandler(clientSocket, lock);
-                clientThread.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (serverSocket != null) {
-                    serverSocket.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            serverSocket = new DatagramSocket(12345); // Port number can be changed
+            while(connected) {
+                DatagramPacket packet = new DatagramPacket(new byte[BUFFERSIZE], BUFFERSIZE);
+                serverSocket.receive(packet);
+                DatagramHandler handler = new DatagramHandler(serverSocket, packet);
+                handler.start();
             }
         }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            if (serverSocket != null) {
+                // wait for all threads to finish
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                serverSocket.close();
+            }
+        }
+        
     }
 }
 
-class ClientHandler extends Thread {
-    private final Socket clientSocket;
-    // lock
-    private static ReentrantLock lock = null;
-
-    public ClientHandler(Socket socket, ReentrantLock lock) {
-        this.clientSocket = socket;
-        ClientHandler.lock = lock;
+class DatagramHandler extends Thread {
+    private DatagramSocket serverSocket = null;
+    private DatagramPacket packet = null;
+    private boolean toExit = false;
+    public DatagramHandler(DatagramSocket socket, DatagramPacket packet) {
+        this.serverSocket = socket;
+        this.packet = packet;
     }
 
     @Override
-    public void run() {
+    public void run () {
         try {
-            BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-
-            String msg;
-            while ((msg = input.readLine()) != null) {
-                if (msg.equals(":exit")) {
-                    System.out.println("Client disconnected: " + clientSocket);
-                    break;
-                } else {
-                    lock.lock();
-                    try {
-                        System.out.println("Received message: " + msg);
-                        String response = processRequest(msg);
-                        output.println(response);
-                        System.out.println("Sent response: " + response);
-                    } finally {
-                        lock.unlock();
-                    }
-                }
+            String msg = new String(packet.getData(), 0, packet.getLength());
+            System.out.println("Client connected: " + packet.getAddress() + ":" + packet.getPort());
+            System.out.println("Message from client: " + msg);
+            String response = processRequest(msg);
+            System.out.println("Response: " + response);
+            packet.setData(response.getBytes());
+            serverSocket.send(packet);
+            if (toExit) {
+                UDPServer.close();
             }
-
-            clientSocket.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -186,9 +182,14 @@ class ClientHandler extends Thread {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
-        } else {
+        } else if (req.equals("exit")) {
+            response = "Goodbye";
+            toExit = true;
+        }
+        else {
             response = "Invalid request";
         }
         return response;
     }
+
 }
