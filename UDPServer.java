@@ -1,10 +1,8 @@
 import java.io.*;
 import java.net.*;
-import java.util.StringTokenizer;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class UDPServer {
-
     // lock
     private static ReentrantLock lock = null;
     private static DatagramSocket serverSocket = null;
@@ -19,22 +17,31 @@ public class UDPServer {
         try {
             lock = new ReentrantLock(true);
             serverSocket = new DatagramSocket(12345); // Port number can be changed
+
             while (connected) {
                 DatagramPacket packet = new DatagramPacket(new byte[BUFFERSIZE], BUFFERSIZE);
                 serverSocket.receive(packet);
                 DatagramHandler handler = new DatagramHandler(serverSocket, packet, lock);
                 handler.start();
             }
-        } catch (IOException e) {
+
+        }
+
+        catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        }
+
+        finally {
             if (serverSocket != null) {
                 // wait for all threads to finish
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
+                }
+
+                catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
                 serverSocket.close();
             }
         }
@@ -66,13 +73,18 @@ class DatagramHandler extends Thread {
                 System.out.println("Response: " + response);
                 packet.setData(response.getBytes());
                 serverSocket.send(packet);
-            } finally {
+            }
+
+            finally {
                 lock.unlock();
             }
+
             if (toExit) {
                 UDPServer.close();
             }
-        } catch (IOException e) {
+        }
+
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -110,25 +122,33 @@ class DatagramHandler extends Thread {
                             break;
                         }
                     }
+
                     if (found) {
                         // Delte the value
                         file.seek(file.getFilePointer() - line.length() - 1);
                         file.writeBytes(" ");
                     }
+
                     // Append the new key-value pair
                     file.seek(file.length());
                     file.writeBytes(key + " " + value + "\n");
                     response = "Added new key-value pair";
 
                     file.close();
-                } catch (IOException e) {
+                }
+
+                catch (IOException e) {
                     e.printStackTrace();
                     response = "Error while processing request";
                 }
-            } else {
+            }
+
+            else {
                 response = "Invalid request";
             }
-        } else if (req.equals("get")) {
+        }
+
+        else if (req.equals("get")) {
             try {
                 // Open the file for reading
                 RandomAccessFile file = new RandomAccessFile("database.txt", "r");
@@ -138,24 +158,32 @@ class DatagramHandler extends Thread {
                     if (line.startsWith(" ")) {
                         continue;
                     }
+
                     String[] lineParts = line.split(" ");
                     String lineKey = lineParts[0];
                     String lineValue = lineParts[1];
+
                     if (lineKey.equals(parts[1])) {
                         found = true;
                         response = lineValue;
                         break;
                     }
                 }
+
                 if (!found) {
                     response = "Key not found";
                 }
+
                 file.close();
-            } catch (IOException e) {
+            }
+
+            catch (IOException e) {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
-        } else if (req.equals("del")) {
+        }
+
+        else if (req.equals("del")) {
             try {
                 // Open the file for reading as well as writing
                 RandomAccessFile file = new RandomAccessFile("database.txt", "rw");
@@ -165,6 +193,7 @@ class DatagramHandler extends Thread {
                     if (line.startsWith(" ")) {
                         continue;
                     }
+
                     String[] lineParts = line.split(" ");
                     String lineKey = lineParts[0];
                     if (lineKey.equals(parts[1])) {
@@ -172,27 +201,38 @@ class DatagramHandler extends Thread {
                         break;
                     }
                 }
+
                 if (found) {
                     // Update the value
                     file.seek(file.getFilePointer() - line.length() - 1);
                     // Mark the line as deleted
                     file.writeBytes(" ");
                     response = "Deleted key " + parts[1];
-                } else {
+                }
+
+                else {
                     response = "Key not found";
                 }
+
                 file.close();
-            } catch (IOException e) {
+            }
+
+            catch (IOException e) {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
-        } else if (req.equals("exit")) {
+
+        }
+
+        else if (req.equals("exit")) {
             response = "Goodbye";
             toExit = true;
-        } else {
+        }
+
+        else {
             response = "Invalid request";
         }
+
         return response;
     }
-
 }

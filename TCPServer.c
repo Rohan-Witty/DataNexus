@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #define BUFFERSIZE 1024
 #define MAXPENDING 10
+
 int main()
 {
     int sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);

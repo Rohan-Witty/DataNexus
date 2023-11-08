@@ -76,11 +76,12 @@ class ClientHandler extends Thread {
     }
 
     private String processRequest(String msg) {
-        // Uncomment the following line to simulate a slow server to test FIFO ordering of requests
+        // Uncomment the following line to simulate a slow server to test FIFO ordering
+        // of requests
         // try {
-        //     Thread.sleep(5000);
+        // Thread.sleep(5000);
         // } catch (InterruptedException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
         String response = "";
         String[] parts = msg.split(" ");
@@ -183,6 +184,32 @@ class ClientHandler extends Thread {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
+        } else if (req.equals("store")) {
+            try {
+                // Open the file for reading as well as writing
+                RandomAccessFile file = new RandomAccessFile("database.txt", "r");
+                String line;
+                int size = 0;
+                while ((line = file.readLine()) != null) {
+                    if (line.startsWith(" ")) {
+                        continue;
+                    }
+
+                    if (line.length() + size < 65000) {
+                        size += line.length();
+                        response += line;
+                    } else {
+                        response = "TRIMMED: \n" + response;
+                        response += line.substring(0, 65000 - size);
+                        break;
+                    }
+                }
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                response = "Error while processing request";
+            }
+
         } else {
             response = "Invalid request";
         }

@@ -7,7 +7,7 @@ import java.rmi.*;
 import java.rmi.server.*;
 import java.io.*;
 
-public class RMIServer
+public class RMIClass
 {
     public static void main(String args[])
     {

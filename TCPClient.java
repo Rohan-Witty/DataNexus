@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class Client {
+public class TCPClient {
     public static void main(String[] args) {
         int BUFSIZE = 32;
         Socket socket = null;
