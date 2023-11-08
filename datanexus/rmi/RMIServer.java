@@ -1,13 +1,82 @@
+package datanexus.rmi;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+
 import java.rmi.*;
 import java.rmi.server.*;
 import java.io.*;
 
-interface Command extends Remote
+public class RMIServer
 {
-    public String processRequest(String msg) throws RemoteException;
+    public static void main(String args[])
+    {
+        boolean isServer = args.length > 0 && args[0].equals("server");
+        if (isServer) {
+            startServer();
+        } else {
+            startClient();
+        }
+    }
+
+    static void startServer() {
+        try
+        {
+            Command stub = new RemoteCommand();
+            
+
+            int port = 1099; // default RMI registry port
+            Registry registry = LocateRegistry.createRegistry(port);
+            registry.bind("Command", stub);
+            System.out.println("Server ready");
+        }
+        
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+
+    static void startClient() {
+        String host = null;
+        try {
+            Registry registry = LocateRegistry.getRegistry(host);
+            Command stub = (Command) registry.lookup("Command");
+
+            boolean connected = true;
+            while (connected) {
+                /* SEND DATA */
+                System.out.println("ENTER MESSAGE FOR SERVER with max 32 characters");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                String msg = reader.readLine();
+
+                String response = stub.processRequest(msg);
+                System.out.println("response: " + response);
+                if (msg.equals("exit")) {
+                    connected = false;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
 }
 
-class RemoteCommand extends UnicastRemoteObject implements Command
+class Terminate extends Thread {
+    
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(1000);
+            System.exit(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+public class RemoteCommand extends UnicastRemoteObject implements Command
 {
     public RemoteCommand() throws RemoteException
     {
@@ -131,34 +200,8 @@ class RemoteCommand extends UnicastRemoteObject implements Command
     }
 }
 
-class Terminate extends Thread {
-    
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(1000);
-            System.exit(0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
 
-
-public class RMIServer
+public interface Command extends Remote
 {
-    public static void main(String args[])
-    {
-        try
-        {
-            Command stub = new RemoteCommand();
-            Naming.rebind("rmi://localhost:5000/sonoo",stub);
-        }
-        
-        catch(Exception e)
-        {
-            System.out.println(e);
-        }
-    }
-
+    public String processRequest(String msg) throws RemoteException;
 }

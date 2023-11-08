@@ -1,11 +1,8 @@
 import java.io.*;
 import java.net.*;
-import java.util.StringTokenizer;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TCPServer {
-    private static final int BUFFERSIZE = 1024;
-    private static final int MAXPENDING = 10;
 
     // lock
     private static ReentrantLock lock = null;

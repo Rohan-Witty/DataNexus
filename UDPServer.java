@@ -4,13 +4,11 @@ import java.util.StringTokenizer;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class UDPServer {
-    private static final int BUFFERSIZE = 1024;
-    private static final int MAXPENDING = 10;
 
     // lock
     private static ReentrantLock lock = null;
     private static DatagramSocket serverSocket = null;
-
+    private static final int BUFFERSIZE = 1024;
     private static boolean connected = true;
 
     public static void close() {
@@ -19,19 +17,17 @@ public class UDPServer {
 
     public static void main(String[] args) {
         try {
+            lock = new ReentrantLock(true);
             serverSocket = new DatagramSocket(12345); // Port number can be changed
-            while(connected) {
+            while (connected) {
                 DatagramPacket packet = new DatagramPacket(new byte[BUFFERSIZE], BUFFERSIZE);
                 serverSocket.receive(packet);
-                DatagramHandler handler = new DatagramHandler(serverSocket, packet);
+                DatagramHandler handler = new DatagramHandler(serverSocket, packet, lock);
                 handler.start();
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (serverSocket != null) {
                 // wait for all threads to finish
                 try {
@@ -42,7 +38,7 @@ public class UDPServer {
                 serverSocket.close();
             }
         }
-        
+
     }
 }
 
@@ -50,36 +46,44 @@ class DatagramHandler extends Thread {
     private DatagramSocket serverSocket = null;
     private DatagramPacket packet = null;
     private boolean toExit = false;
-    public DatagramHandler(DatagramSocket socket, DatagramPacket packet) {
+    private ReentrantLock lock = null;
+
+    public DatagramHandler(DatagramSocket socket, DatagramPacket packet, ReentrantLock lock) {
         this.serverSocket = socket;
         this.packet = packet;
+        this.lock = lock;
     }
 
     @Override
-    public void run () {
+    public void run() {
         try {
             String msg = new String(packet.getData(), 0, packet.getLength());
             System.out.println("Client connected: " + packet.getAddress() + ":" + packet.getPort());
             System.out.println("Message from client: " + msg);
-            String response = processRequest(msg);
-            System.out.println("Response: " + response);
-            packet.setData(response.getBytes());
-            serverSocket.send(packet);
+            lock.lock();
+            try {
+                String response = processRequest(msg);
+                System.out.println("Response: " + response);
+                packet.setData(response.getBytes());
+                serverSocket.send(packet);
+            } finally {
+                lock.unlock();
+            }
             if (toExit) {
                 UDPServer.close();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private String processRequest(String msg) {
-        // Uncomment the following line to simulate a slow server to test FIFO ordering of requests
+        // Uncomment the following line to simulate a slow server to test FIFO ordering
+        // of requests
         // try {
-        //     Thread.sleep(5000);
+        // Thread.sleep(5000);
         // } catch (InterruptedException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
         String response = "";
         String[] parts = msg.split(" ");
@@ -185,8 +189,7 @@ class DatagramHandler extends Thread {
         } else if (req.equals("exit")) {
             response = "Goodbye";
             toExit = true;
-        }
-        else {
+        } else {
             response = "Invalid request";
         }
         return response;
