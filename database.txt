@@ -1,11 +1,2 @@
-  aang
-  an
-  annn
-  an
-  apple
-  cargo
-  bat
-  car
-1 bus
-  100
-0 aang
+1 water
+0 katara

@@ -210,7 +210,33 @@ class ClientHandler extends Thread {
                 response = "Error while processing request";
             }
 
-        } else {
+        } else if (req.equals("clean")) {
+            // Command to clear out all deleted lines by making a copy of the file while ommiting the deleted lines, deleting the original file, 
+            // and renaming the copy to the original file name
+            try {
+                // Open the file for reading as well as writing
+                RandomAccessFile file = new RandomAccessFile("database.txt", "r");
+                RandomAccessFile fileCopy = new RandomAccessFile("databaseCopy.txt", "rw");
+                String line;
+                while ((line = file.readLine()) != null) {
+                    if (line.startsWith(" ")) {
+                        continue;
+                    }
+                    fileCopy.writeBytes(line + "\n");
+                }
+                file.close();
+                fileCopy.close();
+                File database = new File("database.txt");
+                database.delete();
+                File databaseCopy = new File("databaseCopy.txt");
+                databaseCopy.renameTo(database);
+                response = "Cleaned database";
+            } catch (IOException e) {
+                e.printStackTrace();
+                response = "Error while processing request";
+            }
+        }
+        else {
             response = "Invalid request";
         }
         return response;
