@@ -1,16 +1,14 @@
 package datanexus.rmi;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
 
 import java.rmi.*;
 import java.rmi.server.*;
 import java.io.*;
 
-public class RMIClass
-{
-    public static void main(String args[])
-    {
+public class RMIClass {
+    public static void main(String args[]) {
         boolean isServer = args.length > 0 && args[0].equals("server");
         if (isServer) {
             startServer();
@@ -20,19 +18,16 @@ public class RMIClass
     }
 
     static void startServer() {
-        try
-        {
+        try {
             Command stub = new RemoteCommand();
-            
 
             int port = 1099; // default RMI registry port
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("Command", stub);
             System.out.println("Server ready");
         }
-        
-        catch(Exception e)
-        {
+
+        catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -64,7 +59,7 @@ public class RMIClass
 }
 
 class Terminate extends Thread {
-    
+
     @Override
     public void run() {
         try {
@@ -76,15 +71,12 @@ class Terminate extends Thread {
     }
 }
 
-public class RemoteCommand extends UnicastRemoteObject implements Command
-{
-    public RemoteCommand() throws RemoteException
-    {
+public class RemoteCommand extends UnicastRemoteObject implements Command {
+    public RemoteCommand() throws RemoteException {
         super();
     }
 
-    public String processRequest(String msg)
-    {
+    public String processRequest(String msg) {
         String response = "";
         String[] parts = msg.split(" ");
         String req = parts[0];
@@ -192,16 +184,65 @@ public class RemoteCommand extends UnicastRemoteObject implements Command
             Terminate terminateThread = new Terminate();
             terminateThread.start();
             return response;
-        }
-        else {
+        } else if (req.equals("store")) {
+            try {
+                // Open the file for reading as well as writing
+                RandomAccessFile file = new RandomAccessFile("database.txt", "r");
+                String line;
+                int size = 0;
+                while ((line = file.readLine()) != null) {
+                    if (line.startsWith(" ")) {
+                        continue;
+                    }
+
+                    if (line.length() + size < 65000) {
+                        size += line.length();
+                        response += line;
+                    } else {
+                        response = "TRIMMED: \n" + response;
+                        response += line.substring(0, 65000 - size);
+                        break;
+                    }
+                }
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                response = "Error while processing request";
+            }
+
+        } else if (req.equals("clean")) {
+            // Command to clear out all deleted lines by making a copy of the file while
+            // ommiting the deleted lines, deleting the original file,
+            // and renaming the copy to the original file name
+            try {
+                // Open the file for reading as well as writing
+                RandomAccessFile file = new RandomAccessFile("database.txt", "r");
+                RandomAccessFile fileCopy = new RandomAccessFile("databaseCopy.txt", "rw");
+                String line;
+                while ((line = file.readLine()) != null) {
+                    if (line.startsWith(" ")) {
+                        continue;
+                    }
+                    fileCopy.writeBytes(line + "\n");
+                }
+                file.close();
+                fileCopy.close();
+                File database = new File("database.txt");
+                database.delete();
+                File databaseCopy = new File("databaseCopy.txt");
+                databaseCopy.renameTo(database);
+                response = "Cleaned database";
+            } catch (IOException e) {
+                e.printStackTrace();
+                response = "Error while processing request";
+            }
+        } else {
             response = "Invalid request";
         }
         return response;
     }
 }
 
-
-public interface Command extends Remote
-{
+public interface Command extends Remote {
     public String processRequest(String msg) throws RemoteException;
 }

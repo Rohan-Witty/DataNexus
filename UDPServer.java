@@ -24,7 +24,6 @@ public class UDPServer {
                 DatagramHandler handler = new DatagramHandler(serverSocket, packet, lock);
                 handler.start();
             }
-
         }
 
         catch (IOException e) {
@@ -36,9 +35,7 @@ public class UDPServer {
                 // wait for all threads to finish
                 try {
                     Thread.sleep(1000);
-                }
-
-                catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
@@ -73,18 +70,14 @@ class DatagramHandler extends Thread {
                 System.out.println("Response: " + response);
                 packet.setData(response.getBytes());
                 serverSocket.send(packet);
-            }
-
-            finally {
+            } finally {
                 lock.unlock();
             }
 
             if (toExit) {
                 UDPServer.close();
             }
-        }
-
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -141,14 +134,10 @@ class DatagramHandler extends Thread {
                     e.printStackTrace();
                     response = "Error while processing request";
                 }
-            }
-
-            else {
+            } else {
                 response = "Invalid request";
             }
-        }
-
-        else if (req.equals("get")) {
+        } else if (req.equals("get")) {
             try {
                 // Open the file for reading
                 RandomAccessFile file = new RandomAccessFile("database.txt", "r");
@@ -181,9 +170,7 @@ class DatagramHandler extends Thread {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
-        }
-
-        else if (req.equals("del")) {
+        } else if (req.equals("del")) {
             try {
                 // Open the file for reading as well as writing
                 RandomAccessFile file = new RandomAccessFile("database.txt", "rw");
@@ -222,14 +209,62 @@ class DatagramHandler extends Thread {
                 response = "Error while processing request";
             }
 
-        }
-
-        else if (req.equals("exit")) {
+        } else if (req.equals("exit")) {
             response = "Goodbye";
             toExit = true;
-        }
+        } else if (req.equals("store")) {
+            try {
+                // Open the file for reading as well as writing
+                RandomAccessFile file = new RandomAccessFile("database.txt", "r");
+                String line;
+                int size = 0;
+                while ((line = file.readLine()) != null) {
+                    if (line.startsWith(" ")) {
+                        continue;
+                    }
 
-        else {
+                    if (line.length() + size < 65000) {
+                        size += line.length();
+                        response += line;
+                    } else {
+                        response = "TRIMMED: \n" + response;
+                        response += line.substring(0, 65000 - size);
+                        break;
+                    }
+                }
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                response = "Error while processing request";
+            }
+
+        } else if (req.equals("clean")) {
+            // Command to clear out all deleted lines by making a copy of the file while
+            // ommiting the deleted lines, deleting the original file,
+            // and renaming the copy to the original file name
+            try {
+                // Open the file for reading as well as writing
+                RandomAccessFile file = new RandomAccessFile("database.txt", "r");
+                RandomAccessFile fileCopy = new RandomAccessFile("databaseCopy.txt", "rw");
+                String line;
+                while ((line = file.readLine()) != null) {
+                    if (line.startsWith(" ")) {
+                        continue;
+                    }
+                    fileCopy.writeBytes(line + "\n");
+                }
+                file.close();
+                fileCopy.close();
+                File database = new File("database.txt");
+                database.delete();
+                File databaseCopy = new File("databaseCopy.txt");
+                databaseCopy.renameTo(database);
+                response = "Cleaned database";
+            } catch (IOException e) {
+                e.printStackTrace();
+                response = "Error while processing request";
+            }
+        } else {
             response = "Invalid request";
         }
 
