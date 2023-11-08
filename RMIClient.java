@@ -1,11 +1,13 @@
-public class MyClient
+import java.rmi.*;
+
+public class RMIClient
 {
     public static void main(String args[])
     {
         try
         {
-            Adder stub=(Adder)Naming.lookup("rmi://localhost:5000/sonoo");
-            System.out.println(stub.add(34,4));
+            RemoteCommand stub = (RemoteCommand) Naming.lookup("rmi://localhost:5000/sonoo");
+            System.out.println(stub.processRequest("put 1 2"));
         }
 
         catch(Exception e)

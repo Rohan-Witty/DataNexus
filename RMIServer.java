@@ -1,16 +1,15 @@
 import java.rmi.*;
-import java.rmi.registry.*;
+import java.rmi.server.*;
+import java.io.*;
 
-
-public interface Command extends Remote
+interface Command extends Remote
 {
     public String processRequest(String msg) throws RemoteException;
 }
 
-
-public class RemoteCommand extends UnicastRemoteObject implements Command
+class RemoteCommand extends UnicastRemoteObject implements Command
 {
-    Remote() throws RemoteException
+    public RemoteCommand() throws RemoteException
     {
         super();
     }
@@ -120,7 +119,10 @@ public class RemoteCommand extends UnicastRemoteObject implements Command
             }
         } else if (req.equals("exit")) {
             response = "Goodbye";
-            toExit = true;
+            // Write code to terminate the server here
+            Terminate terminateThread = new Terminate();
+            terminateThread.start();
+            return response;
         }
         else {
             response = "Invalid request";
@@ -129,14 +131,27 @@ public class RemoteCommand extends UnicastRemoteObject implements Command
     }
 }
 
+class Terminate extends Thread {
+    
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(1000);
+            System.exit(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
-public class MyServer{
 
+public class RMIServer
+{
     public static void main(String args[])
     {
         try
         {
-            Adder stub = new Remote();
+            Command stub = new RemoteCommand();
             Naming.rebind("rmi://localhost:5000/sonoo",stub);
         }
         
