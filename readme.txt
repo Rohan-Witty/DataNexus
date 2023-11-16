@@ -61,7 +61,57 @@ The client will ask for commands to be given. The commands are as follows:
 
 clean is an additional command that is not part of the assignment. It is used to compress the database file and remove any deleted entries from the database file.
 
+## For checking serialized execution
+In order to be able to see and test the serialized execution of the code, we have put in comments code blocks in each file. They are as follows:
+1) RunTCP.java: Lines 215-219
+2) RunUDP.java: Lines 114-118
+3) RunRMI.java: Lines 150-154
+
+## How to run tests from a testcase file
+1) You can modify the `testcase.txt` file to add your own testcases. 
+
+2) The code will by default ask the user for inputs. In case you want to run it from the testcases file, 
+make the following changes:
+
+2.a) For TCP, change the line 37 in `RunTCP.java`, setting the variable to true:
+```
+    private boolean test_case = true;
+```
+
+2.b) For UDP, change the line 307 in `RunUDP.java`, setting the variable to true:
+```
+    public boolean test_case = true;
+```
+
+2.c) For RMI, change the lines 24 and 25 in `RunRMI.java`, running startTestClient(host) instead of startClient(host).
+```
+    startTestClient(host);
+    // startClient(host);
+```
+
 P.S. In order to be able to see and test the serialized execution of the code, we have put in comments code blocks in each file. They are as follows:
 1) RunTCP.java: Lines 215-219
 2) RunUDP.java: Lines 114-118
 3) RunRMI.java: Lines 150-154
+
+## How to run tests from a testcase file
+1) You can modify the `testcase.txt` file to add your own testcases. 
+
+2) The code will by default ask the user for inputs. In case you want to run it from the testcases file, 
+make the following changes:
+
+2.a) For TCP, change the line 37 in `RunTCP.java`, setting the variable to true:
+```
+    private boolean test_case = true;
+```
+
+2.b) For UDP, change the line 307 in `RunUDP.java`, setting the variable to true:
+```
+    public boolean test_case = true;
+```
+
+2.c) For RMI, change the lines 24 and 25 in `RunRMI.java`, running startTestClient(host) instead of startClient(host).
+```
+    startTestClient(host);
+    // startClient(host);
+```
