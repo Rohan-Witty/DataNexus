@@ -2,11 +2,17 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.locks.ReentrantLock;
 
+/*
+ * RunTCP is the main class that starts either the TCP server or client based on command line arguments.
+ * If no arguments are provided, it starts the client; if "server" is provided, it starts the server.
+ */
 public class RunTCP {
     public static void main(String[] args) {
-        // Start the server or client based on the command line arguments
-        // If no arguments are provided, start the client
-        // If the argument "server" is provided, start the server
+        /*
+         * Start the server or client based on the command line arguments
+         * If no arguments are provided, start the client
+         * If the argument "server" is provided, start the server
+         */
         boolean isServer = args.length > 0 && args[0].equals("server");
         if (isServer) {
             TCPServer server = new TCPServer();
@@ -18,8 +24,12 @@ public class RunTCP {
     }
 }
 
+/*
+ * TCPClient class represents a TCP client that connects to a server, sends
+ * messages, and receives responses.
+ */
 class TCPClient {
-    public void runClient() { 
+    public void runClient() {
         int BUFSIZE = 32;
         Socket socket = null;
 
@@ -74,9 +84,13 @@ class TCPClient {
     }
 }
 
+/*
+ * TCPServer class represents a TCP server that listens for client connections
+ * and spawns threads to handle them.
+ */
 class TCPServer {
 
-    // lock
+    /* lock */
     private static ReentrantLock lock = null;
 
     public void runServer() {
@@ -107,9 +121,13 @@ class TCPServer {
     }
 }
 
+/*
+ * ClientHandler is a thread responsible for handling client connections in the
+ * TCPServer.
+ */
 class ClientHandler extends Thread {
     private final Socket clientSocket;
-    // lock
+    /* lock */
     private static ReentrantLock lock = null;
 
     public ClientHandler(Socket socket, ReentrantLock lock) {
@@ -149,8 +167,10 @@ class ClientHandler extends Thread {
     }
 
     private String processRequest(String msg) {
-        // Uncomment the following line to simulate a slow server to test FIFO ordering
-        // of requests
+        /*
+         * Uncomment the following line to simulate a slow server to test FIFO ordering
+         * of requests
+         */
         // try {
         // Thread.sleep(5000);
         // } catch (InterruptedException e) {
@@ -161,12 +181,13 @@ class ClientHandler extends Thread {
         String req = parts[0];
 
         if (req.equals("put")) {
+            /* Code to add a new key-value pair to the database */
             if (parts.length >= 3) {
                 String key = parts[1];
                 String value = parts[2];
 
                 try {
-                    // Open the file for reading as well as writing
+                    /* Open the file for reading as well as writing */
                     RandomAccessFile file = new RandomAccessFile("database.txt", "rw");
                     String line;
                     boolean found = false;
@@ -182,11 +203,11 @@ class ClientHandler extends Thread {
                         }
                     }
                     if (found) {
-                        // Delte the value
+                        /* Delete the value */
                         file.seek(file.getFilePointer() - line.length() - 1);
                         file.writeBytes(" ");
                     }
-                    // Append the new key-value pair
+                    /* Append the new key-value pair */
                     file.seek(file.length());
                     file.writeBytes(key + " " + value + "\n");
                     response = "Added new key-value pair";
@@ -200,8 +221,9 @@ class ClientHandler extends Thread {
                 response = "Invalid request";
             }
         } else if (req.equals("get")) {
+            /* Code to retrieve the value for a given key from the database */
             try {
-                // Open the file for reading
+                /* Open the file for reading */
                 RandomAccessFile file = new RandomAccessFile("database.txt", "r");
                 String line;
                 boolean found = false;
@@ -227,8 +249,9 @@ class ClientHandler extends Thread {
                 response = "Error while processing request";
             }
         } else if (req.equals("del")) {
+            /* Code to delete a key-value pair from the database */
             try {
-                // Open the file for reading as well as writing
+                /* Open the file for reading as well as writing */
                 RandomAccessFile file = new RandomAccessFile("database.txt", "rw");
                 String line;
                 boolean found = false;
@@ -244,9 +267,9 @@ class ClientHandler extends Thread {
                     }
                 }
                 if (found) {
-                    // Update the value
+                    /* Update the value */
                     file.seek(file.getFilePointer() - line.length() - 1);
-                    // Mark the line as deleted
+                    /* Mark the line as deleted */
                     file.writeBytes(" ");
                     response = "Deleted key " + parts[1];
                 } else {
@@ -258,8 +281,9 @@ class ClientHandler extends Thread {
                 response = "Error while processing request";
             }
         } else if (req.equals("store")) {
+            /* Code to retrieve and return a portion of the database (if needed) */
             try {
-                // Open the file for reading as well as writing
+                /* Open the file for reading as well as writing */
                 RandomAccessFile file = new RandomAccessFile("database.txt", "r");
                 String line;
                 int size = 0;
@@ -284,10 +308,13 @@ class ClientHandler extends Thread {
             }
 
         } else if (req.equals("clean")) {
-            // Command to clear out all deleted lines by making a copy of the file while ommiting the deleted lines, deleting the original file, 
-            // and renaming the copy to the original file name
+            /*
+             * Command to clear out all deleted lines by making a copy of the file while
+             * ommiting the deleted lines, deleting the original file,
+             * and renaming the copy to the original file name
+             */
             try {
-                // Open the file for reading as well as writing
+                /* Open the file for reading as well as writing */
                 RandomAccessFile file = new RandomAccessFile("database.txt", "r");
                 RandomAccessFile fileCopy = new RandomAccessFile("databaseCopy.txt", "rw");
                 String line;
@@ -308,11 +335,10 @@ class ClientHandler extends Thread {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
-        }
-        else if (req.equals("exit")) {
+        } else if (req.equals("exit")) {
+            /* Code to terminate the server */
             response = "Goodbye";
-        }
-        else {
+        } else {
             response = "Invalid request";
         }
         return response;
