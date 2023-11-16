@@ -60,3 +60,8 @@ The client will ask for commands to be given. The commands are as follows:
 ```
 
 clean is an additional command that is not part of the assignment. It is used to compress the database file and remove any deleted entries from the database file.
+
+P.S. In order to be able to see and test the serialized execution of the code, we have put in comments code blocks in each file. They are as follows:
+1) RunTCP.java: Lines 215-219
+2) RunUDP.java: Lines 114-118
+3) RunRMI.java: Lines 150-154
