@@ -5,6 +5,7 @@ import java.rmi.registry.Registry;
 
 import java.rmi.*;
 import java.rmi.server.*;
+import java.util.concurrent.locks.ReentrantLock;
 import java.io.*;
 
 public class RMIClass {
@@ -72,11 +73,21 @@ class Terminate extends Thread {
 }
 
 public class RemoteCommand extends UnicastRemoteObject implements Command {
+    private static ReentrantLock lock = null;
     public RemoteCommand() throws RemoteException {
         super();
+        lock = new ReentrantLock(true);
     }
 
     public String processRequest(String msg) {
+        // Acquire the lock
+        lock.lock();
+        // Sleep for 2 seconds to simulate a long running process
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String response = "";
         String[] parts = msg.split(" ");
         String req = parts[0];
@@ -239,6 +250,8 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
         } else {
             response = "Invalid request";
         }
+        // Release the lock
+        lock.unlock();
         return response;
     }
 }
