@@ -1,5 +1,3 @@
-package datanexus.rmi;
-
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -10,6 +8,9 @@ import java.io.*;
 
 public class RMIClass {
     public static void main(String args[]) {
+        // Start the server or client based on the command line arguments
+        // If no arguments are provided, start the client
+        // If the argument "server" is provided, start the server
         boolean isServer = args.length > 0 && args[0].equals("server");
         if (isServer) {
             startServer();
@@ -20,6 +21,7 @@ public class RMIClass {
 
     static void startServer() {
         try {
+            // Create a new instance of RemoteCommand
             Command stub = new RemoteCommand();
 
             int port = 1099; // default RMI registry port
@@ -83,11 +85,11 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
         // Acquire the lock
         lock.lock();
         // Sleep for 2 seconds to simulate a long running process
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     Thread.sleep(2000);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
         String response = "";
         String[] parts = msg.split(" ");
         String req = parts[0];
@@ -113,12 +115,13 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
                             break;
                         }
                     }
+                    // If the key was found, delete the old value
                     if (found) {
                         // Delete the value
                         file.seek(file.getFilePointer() - line.length() - 1);
                         file.writeBytes(" ");
                     }
-                    // Append the new key-value pair
+                    // Append the new key-value pair to the end of the file
                     file.seek(file.length());
                     file.writeBytes(key + " " + value + "\n");
                     response = "Added new key-value pair";
