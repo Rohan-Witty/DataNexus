@@ -264,7 +264,11 @@ class DatagramHandler extends Thread {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
-        } else {
+        }
+        else if (req.equals("Goodbye")) {
+            response = "Closing connection";
+        }
+        else {
             response = "Invalid request";
         }
 

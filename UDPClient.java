@@ -23,6 +23,8 @@ public class UDPClient {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                if (!connected)
+                    break;
                 System.out.println("ENTER MESSAGE FOR SERVER with max 32 characters");
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 String msg = reader.readLine();
