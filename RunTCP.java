@@ -18,7 +18,11 @@ public class RunTCP {
             TCPServer server = new TCPServer();
             server.runServer();
         } else {
-            TCPClient client = new TCPClient();
+            String ipAddress = "localhost"; // Default IP address
+            if (args.length > 0) {
+                ipAddress = args[0];
+            }
+            TCPClient client = new TCPClient(ipAddress);
             client.runClient();
         }
     }
@@ -29,13 +33,17 @@ public class RunTCP {
  * messages, and receives responses.
  */
 class TCPClient {
+    private final String ipAddress;
+    TCPClient(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
     public void runClient() {
         int BUFSIZE = 32;
         Socket socket = null;
 
         try {
             /* CREATE A TCP SOCKET */
-            socket = new Socket("127.0.0.1", 12345); // Replace IP and port as needed
+            socket = new Socket(ipAddress, 12345); // Port number can be changed
 
             System.out.println("Client Socket Created");
 

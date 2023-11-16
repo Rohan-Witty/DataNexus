@@ -8,7 +8,7 @@ import java.io.*;
 
 /* RMIClass is the main class that either starts the RMI server or client based on the command line arguments. */
 
-public class RMIClass {
+public class RunRMI {
     public static void main(String args[]) {
         /*
          * Start the server or client based on the command line arguments
