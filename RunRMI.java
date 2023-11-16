@@ -21,7 +21,7 @@ public class RunRMI {
             startServer();
         } else {
             String host = args.length > 0 ? args[0] : null;
-            
+            // startTestClient(host);
             startClient(host);
         }
     }
@@ -67,6 +67,39 @@ public class RunRMI {
                     connected = false;
                 }
             }
+        } catch (Exception e) {
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    static void startTestClient(String host) {
+        try {
+            Registry registry = LocateRegistry.getRegistry(host);
+            Command stub = (Command) registry.lookup("Command");
+
+            // Open file testcase.txt
+            File file = new File("testcase.txt");
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            // Also, open log file
+            File log = new File("RMILatency.csv");
+            BufferedWriter logger = new BufferedWriter(new FileWriter(log));
+
+            // Make a call to the server for each line in the file
+            String msg;
+            while ((msg = br.readLine()) != null) {
+                long startTime = System.nanoTime();
+                String response = stub.processRequest(msg);
+                long endTime = System.nanoTime();
+                long latency = endTime - startTime;
+                // Get first word of the message
+                String[] parts = msg.split(" ");
+                logger.write(parts[0] + "," + latency + "\n");
+                System.out.println("response: " + response);
+            }
+            br.close();
+            logger.close();
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();

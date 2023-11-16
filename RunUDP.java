@@ -292,7 +292,7 @@ class DatagramHandler extends Thread {
             }
         }
         // else if (req.equals("Goodbye")) {
-        //     response = "Closing connection";
+        // response = "Closing connection";
         // }
         else {
             response = "Invalid request";
@@ -304,6 +304,11 @@ class DatagramHandler extends Thread {
 
 class UDPClient {
     public static boolean connected = true;
+    public boolean test_case = true;
+    // Array of start times
+    public static long[] start_times = new long[1001];
+    public static long[] end_times = new long[1001];
+    public static String[] commands = new String[1001];
 
     public void startClient(String ipAddress) {
         try {
@@ -314,7 +319,52 @@ class UDPClient {
             // Start a thread to receive messages
             Receiver receiver = new Receiver(socket);
             receiver.start();
-
+            if (test_case) {
+                // for each line of test case, send a message
+                // Open test file
+                File file = new File("testcase.txt");
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String msg;
+                int i = 0;
+                // For each line in the test file, send the message to the server and log the
+                // time taken in file "UDPLatency.csv" along with the first word of message sent
+                while ((msg = br.readLine()) != null) {
+                    // Sleep for 1 second
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    // Create a datagram packet, containing a maximum buffer of 256 bytes
+                    DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.length(), serverAddress,
+                            serverPort);
+                    // Send a datagram packet from this socket
+                    socket.send(packet);
+                    // Log the time
+                    start_times[i] = System.nanoTime();
+                    commands[i] = msg.split(" ")[0];
+                    i++;
+                }
+                // Close the file
+                br.close();
+                System.out.println("Test cases sent");
+                // Open file to write the latency
+                FileWriter latency = new FileWriter("UDPLatency.csv");
+                latency.write("Command,Latency\n");
+                // Wait for all threads to finish
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // Write the latency to the file
+                for (int j = 0; j < i; j++) {
+                    latency.write(commands[j] + "," + (end_times[j] - start_times[j]) + "\n");
+                    // System.out.println(commands[j] + "," + (end_times[j] - start_times[j]));
+                }
+                // Close the file
+                latency.close();
+            }
             while (connected) {
                 /* SEND DATA */
                 try {
@@ -343,8 +393,9 @@ class UDPClient {
 }
 
 class Receiver extends Thread {
+    public static int counter = 0;
     DatagramSocket socket = null;
-
+    
     Receiver(DatagramSocket socket) {
         this.socket = socket;
     }
@@ -355,6 +406,9 @@ class Receiver extends Thread {
             while (UDPClient.connected) {
                 DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
                 socket.receive(packet);
+                // Log the time
+                UDPClient.end_times[counter] = System.nanoTime();
+                counter++;
                 String msg = new String(packet.getData(), 0, packet.getLength());
                 System.out.println("Message from server: " + msg);
                 if (msg.equals("Goodbye")) {
@@ -363,8 +417,9 @@ class Receiver extends Thread {
                 }
             }
             // Send a datagram packet from this socket
-            // DatagramPacket packet = new DatagramPacket("Goodbye".getBytes(), "Goodbye".length(),
-            //         InetAddress.getByName("localhost"), 12345);
+            // DatagramPacket packet = new DatagramPacket("Goodbye".getBytes(),
+            // "Goodbye".length(),
+            // InetAddress.getByName("localhost"), 12345);
             // socket.send(packet);
 
         } catch (Exception e) {

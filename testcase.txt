@@ -1,0 +1,1001 @@
+del 67865
+put 87256 58113
+put 48320 99191
+put 26279 21905
+del 10749
+del 44216
+del 42029
+del 51412
+store
+del 25657
+store
+del 21376
+del 7564
+get 96715
+del 13046
+put 46855 80922
+get 93649
+store
+store
+put 27525 21122
+get 58963
+get 12975
+get 50712
+store
+put 39115 66502
+store
+get 13477
+del 31252
+store
+get 14865
+put 12330 51402
+put 54024 37852
+put 81581 12668
+del 3893
+del 96071
+put 63024 58693
+get 64252
+get 45607
+put 53730 74984
+store
+get 39847
+get 70744
+put 85358 99825
+get 31116
+del 57129
+put 33298 5179
+put 19968 89800
+put 44182 68273
+del 77291
+del 28390
+get 69171
+store
+put 54920 40174
+del 71475
+store
+store
+get 47108
+get 48525
+put 43431 33279
+get 16361
+del 73293
+del 2542
+get 63113
+get 27205
+store
+put 73548 57185
+store
+put 69796 33031
+put 65197 58561
+store
+store
+del 70803
+put 50161 2383
+del 34563
+store
+store
+del 68459
+get 17720
+store
+get 34209
+store
+get 22266
+store
+store
+del 6228
+get 82650
+put 71815 76970
+get 10803
+put 65420 9862
+del 96907
+get 83884
+store
+get 11398
+store
+put 79567 70828
+store
+put 32651 79116
+get 84878
+put 17713 51302
+store
+del 99201
+get 52926
+put 38999 76201
+del 18169
+del 35947
+put 70311 12790
+store
+get 30722
+store
+get 82656
+get 33858
+store
+store
+get 42633
+put 3045 12211
+del 26879
+put 41401 68500
+get 6862
+get 35688
+store
+store
+get 10197
+store
+get 80355
+del 17344
+get 45669
+del 16552
+get 24765
+put 95256 23165
+del 31300
+get 77263
+put 43734 35324
+del 43628
+del 51127
+put 66435 23424
+put 31450 48332
+put 62157 91806
+store
+del 38461
+store
+get 9521
+store
+put 81226 9008
+get 65589
+put 30682 20315
+del 70900
+store
+get 95136
+store
+del 91637
+store
+store
+get 2782
+del 12993
+put 65670 8218
+store
+store
+get 2614
+del 89766
+get 34213
+store
+store
+get 59894
+store
+del 5603
+del 28080
+put 80747 96283
+put 66059 62004
+store
+put 10310 72386
+del 13515
+del 42970
+del 89144
+put 6810 61718
+del 39525
+put 49945 80159
+get 10922
+get 90696
+get 47356
+del 24052
+put 37119 28175
+del 40275
+del 89020
+put 24089 17653
+del 48113
+del 1623
+del 78837
+get 68988
+store
+store
+get 61403
+put 13929 23100
+store
+store
+put 95523 62479
+get 57130
+put 54445 69910
+store
+del 74014
+get 70524
+store
+get 97666
+del 33274
+put 22511 59846
+store
+put 8457 55236
+store
+get 4742
+del 55859
+store
+store
+put 8923 94663
+del 52096
+put 26795 31420
+put 96031 29600
+get 51848
+put 25081 35634
+store
+del 65940
+del 15383
+del 7952
+put 37283 3758
+del 2464
+store
+get 34524
+del 14581
+put 79826 787
+get 14644
+get 4840
+store
+put 55670 44697
+del 28224
+store
+get 40675
+store
+get 90289
+put 41735 87379
+put 62467 55814
+del 45550
+get 70379
+del 80629
+put 26077 61977
+del 9501
+put 93013 6696
+get 59260
+store
+store
+get 59347
+get 57065
+store
+put 43830 11228
+put 59285 55812
+put 26200 58977
+store
+store
+get 37713
+put 54204 29583
+store
+get 36701
+store
+put 77671 56351
+get 31984
+put 5297 97822
+store
+store
+put 62683 78075
+store
+del 22407
+store
+get 66539
+store
+del 15091
+del 62088
+get 15573
+put 9650 64590
+store
+get 61015
+del 10430
+del 59750
+get 50615
+del 81030
+store
+put 92959 48079
+del 63721
+del 42033
+put 32403 7005
+get 13732
+put 94365 76324
+del 5333
+get 89693
+store
+store
+put 38761 78670
+get 42117
+put 29891 16408
+del 68800
+put 27911 32772
+del 86008
+store
+store
+del 36614
+get 1982
+put 33353 85212
+get 49658
+del 31997
+put 29910 97384
+del 3164
+store
+put 86219 84530
+store
+put 11813 54917
+store
+store
+put 97928 17051
+get 73504
+get 4543
+put 22273 77556
+store
+get 261
+get 19708
+del 80416
+store
+put 87433 17076
+store
+put 36168 46253
+put 50759 15236
+put 89127 82592
+put 43082 47259
+get 47884
+store
+put 18494 90250
+del 10137
+get 2134
+get 61453
+put 89026 55680
+store
+put 45267 43634
+put 48645 47995
+get 47067
+del 12427
+put 64172 40877
+put 24844 12399
+get 99273
+put 37436 10285
+del 7149
+put 83837 34567
+put 43965 78513
+del 15649
+store
+put 46461 24184
+del 24028
+put 46355 21827
+del 69766
+del 13076
+del 10932
+put 22970 87060
+get 59051
+put 44696 37183
+put 94636 63611
+put 11899 89796
+put 18024 4151
+put 45033 51366
+put 2538 91811
+del 19572
+store
+put 3727 54947
+get 34003
+del 42680
+store
+put 19363 73183
+store
+put 5511 5006
+del 89740
+get 67263
+get 96335
+store
+store
+get 49710
+put 34300 33930
+put 8330 48081
+del 63409
+del 90668
+get 47024
+get 75270
+del 5600
+store
+put 44820 67051
+put 90107 12432
+store
+del 43716
+del 11240
+put 7796 11852
+del 48953
+get 18850
+del 76014
+get 25623
+put 15298 9704
+put 69606 76871
+get 26460
+get 5940
+put 83184 36879
+store
+del 5630
+put 50868 92818
+put 19312 2443
+get 73292
+put 49884 69716
+put 12026 17316
+del 366
+put 44409 55535
+del 82875
+del 66507
+del 62912
+store
+get 88231
+del 54279
+del 16240
+put 44687 92777
+put 90380 9851
+put 62284 14538
+store
+put 89714 75212
+del 54546
+get 59650
+put 89330 38321
+get 36435
+store
+get 23044
+get 78054
+del 51094
+del 71187
+put 7307 47465
+store
+del 28431
+get 37538
+get 50508
+put 5535 51846
+store
+get 65573
+put 8664 37205
+put 63108 22466
+del 60439
+put 98807 79969
+del 97483
+put 1810 61621
+put 53338 63930
+del 14279
+del 52392
+put 65770 93493
+put 5611 98991
+put 89534 86247
+del 6244
+del 94870
+get 234
+get 36893
+get 72029
+get 59235
+get 4348
+put 9464 18661
+del 67017
+put 28766 53546
+get 24469
+del 35621
+store
+del 72505
+get 33718
+store
+store
+get 38210
+get 28152
+put 61313 11839
+del 20353
+put 54828 41528
+get 60008
+get 25848
+store
+del 34081
+put 5596 89545
+get 70284
+del 86197
+store
+put 92170 18142
+del 33615
+store
+put 64049 39096
+put 35445 47119
+del 57695
+del 10547
+del 3873
+get 73770
+store
+del 88765
+del 51854
+store
+put 77973 58
+put 65298 78925
+store
+store
+store
+put 4842 43670
+store
+store
+store
+store
+store
+put 87760 26175
+put 33997 33716
+put 69740 83235
+get 6103
+get 56081
+del 54753
+get 76386
+put 81649 60495
+put 65676 48621
+get 63624
+store
+put 94425 20928
+store
+put 46427 51088
+store
+del 3976
+del 27039
+get 53098
+store
+store
+put 29425 20987
+put 42447 3830
+get 79505
+get 25984
+put 2096 90880
+put 37785 4349
+store
+store
+store
+del 62257
+put 68991 81749
+get 85650
+get 41613
+put 1033 78742
+del 22326
+put 79811 59333
+get 75320
+put 36802 53065
+put 72888 25512
+put 62125 49439
+del 9706
+del 70688
+store
+del 41571
+get 79811
+store
+put 88292 34420
+store
+put 77410 85802
+store
+get 90576
+get 21101
+store
+del 83291
+del 86741
+put 44119 89285
+del 89285
+put 98459 15247
+put 53478 21370
+del 18476
+store
+get 79659
+del 35398
+del 637
+del 3879
+put 1894 3056
+del 76195
+get 82974
+put 40596 66627
+put 57485 3405
+store
+put 25466 5004
+store
+put 20480 67451
+put 18358 44980
+put 8477 26114
+put 16788 96665
+get 13074
+put 70074 91711
+put 34710 19970
+del 18208
+store
+store
+get 93762
+del 10372
+store
+store
+del 33326
+put 44124 75587
+store
+get 96743
+get 515
+put 64256 80214
+get 33637
+get 31979
+get 4329
+store
+store
+del 49566
+del 80824
+del 80718
+get 59086
+del 93683
+get 12612
+get 6692
+store
+get 3295
+del 26476
+del 81001
+get 8791
+del 1479
+get 84864
+store
+get 86122
+put 4451 39057
+get 77001
+put 27539 78947
+get 49465
+get 88154
+del 54613
+get 96883
+store
+put 16544 83025
+get 88080
+del 33923
+get 5042
+del 35267
+get 29018
+put 53368 49147
+get 3375
+del 7188
+store
+get 89968
+del 76066
+store
+get 10386
+store
+del 78975
+del 41601
+del 10606
+store
+store
+get 50632
+del 59174
+store
+put 33536 58060
+put 10877 667
+put 98772 67233
+store
+store
+del 11311
+store
+put 17388 90912
+del 68560
+del 80328
+put 827 19104
+put 76250 11901
+get 98820
+store
+store
+put 72179 86742
+put 47578 89474
+del 61965
+put 10477 91517
+get 5723
+put 18065 25364
+put 74870 96657
+del 83037
+del 25976
+del 12233
+put 1467 87039
+del 38259
+put 32439 84896
+put 89269 52091
+del 88273
+get 14397
+del 85984
+del 1540
+put 87641 63168
+put 47527 68562
+get 69271
+store
+put 34506 90748
+store
+put 95856 80842
+get 23902
+store
+put 67362 10362
+put 28678 47441
+del 93476
+get 3867
+get 28509
+del 26012
+put 73935 28801
+store
+put 32541 73381
+del 82463
+put 62679 61987
+get 41926
+store
+store
+del 32693
+del 1293
+del 60799
+put 89874 4059
+put 46319 90037
+del 1267
+get 2300
+del 36017
+del 5566
+store
+del 46180
+del 13939
+put 88459 60505
+put 57982 34967
+put 72703 39619
+store
+del 48559
+put 75429 36628
+del 50895
+get 74207
+store
+put 82659 6441
+store
+del 92137
+get 71852
+get 78405
+store
+put 35058 48883
+put 98527 1548
+get 13056
+del 84748
+store
+get 51012
+del 55202
+put 78733 82531
+store
+del 10903
+get 52537
+put 9503 6274
+del 98953
+del 2166
+store
+get 3798
+get 62004
+del 68055
+get 55673
+get 98384
+get 57579
+store
+del 46085
+get 4741
+store
+del 43489
+del 79090
+store
+store
+get 76280
+get 10420
+store
+put 9329 52879
+store
+get 83664
+put 95985 70039
+del 55118
+del 15815
+put 63428 48799
+put 93229 67562
+put 18536 89904
+del 44581
+del 32614
+put 68095 27640
+del 71117
+put 60786 51622
+store
+store
+get 25487
+store
+get 67485
+del 57096
+store
+put 48136 59726
+put 96289 36904
+del 70691
+put 87233 25361
+del 24738
+store
+get 96708
+store
+del 94471
+del 73656
+del 64930
+get 37631
+store
+get 94803
+del 2975
+get 24531
+put 13690 1549
+store
+put 82256 79011
+get 10495
+del 41551
+get 45197
+get 20793
+store
+store
+store
+put 89304 92850
+get 45293
+put 20763 27139
+put 77990 78050
+store
+get 41197
+store
+get 13466
+store
+get 23065
+del 2673
+put 18835 24014
+del 56331
+put 86137 79332
+store
+put 41456 4245
+store
+del 54632
+get 2255
+store
+store
+del 90805
+store
+del 70754
+put 96211 66267
+del 87133
+del 70300
+get 62297
+put 5469 69402
+del 69481
+del 63049
+put 61114 69369
+store
+del 56829
+get 66768
+store
+put 22418 73959
+get 77570
+get 90353
+store
+put 77357 76230
+put 42537 76515
+del 68371
+put 75110 74761
+store
+get 59714
+get 70164
+del 6399
+store
+get 44452
+store
+del 18576
+store
+del 72242
+store
+put 82881 17627
+get 26382
+store
+store
+del 60928
+del 73519
+del 55072
+get 45357
+get 81108
+del 37210
+put 51764 55790
+del 91193
+get 96162
+get 61797
+del 87878
+put 62042 18361
+get 24911
+get 19395
+del 44987
+get 96347
+put 63469 34561
+put 65686 92826
+put 41517 41020
+store
+del 5675
+put 46070 94089
+put 51437 70832
+put 67489 1789
+get 42591
+del 25541
+del 15303
+get 45987
+store
+del 36817
+put 20567 43442
+put 34697 5254
+get 95186
+get 12740
+del 47696
+del 59853
+get 49609
+del 16613
+get 12797
+put 8054 60165
+del 53398
+put 25258 98790
+store
+put 42210 92419
+store
+store
+put 68270 82546
+store
+del 44436
+get 37093
+store
+put 1438 98195
+get 51455
+put 48797 75901
+store
+store
+put 25882 37638
+get 71763
+get 94932
+put 63438 6042
+store
+get 47043
+del 32351
+store
+del 52103
+del 82000
+put 99197 26161
+put 78812 82714
+get 16332
+store
+store
+put 10592 774
+del 34370
+store
+del 92231
+get 74327
+del 57046
+put 4867 37005
+put 24750 10337
+del 82063
+put 18250 64693
+put 22733 59345
+put 6864 35344
+get 38094
+store
+get 77233
+put 5605 10783
+del 38219
+put 43196 62048
+put 20603 8804
+store
+del 97839
+get 61429
+del 36240
+store
+put 14270 33185
+del 35580
+store
+put 24961 45809
+store
+del 43436
+get 47295
+del 25684
+store
+store
+store
+del 51993
+put 57860 65932
+store
+del 99114
+put 52663 27919
+put 29306 33160
+put 51113 96682
+del 18507
+del 60021
+put 54146 12906
+get 13629
+store
+del 95241
+del 85235
+del 50656
+get 4489
+del 32723
+del 90026
+get 30172
+put 50461 99262
+get 23025
+put 86438 29871
+del 40042
+exit

@@ -34,9 +34,12 @@ public class RunTCP {
  */
 class TCPClient {
     private final String ipAddress;
+    private boolean test_case = false;
+
     TCPClient(String ipAddress) {
         this.ipAddress = ipAddress;
     }
+
     public void runClient() {
         int BUFSIZE = 32;
         Socket socket = null;
@@ -56,35 +59,65 @@ class TCPClient {
             BufferedReader input = new BufferedReader(new InputStreamReader(in));
 
             boolean connected = true;
-            while (connected) {
-                /* SEND DATA */
-                System.out.println("ENTER MESSAGE FOR SERVER with max 32 characters");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                String msg = reader.readLine();
+            if (!test_case) {
+                while (connected) {
+                    /* SEND DATA */
+                    System.out.println("ENTER MESSAGE FOR SERVER with max 32 characters");
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                    String msg = reader.readLine();
 
-                output.println(msg);
+                    output.println(msg);
 
-                System.out.println("Data Sent");
+                    System.out.println("Data Sent");
 
-                /* RECEIVE BYTES */
-                char[] recvBuffer = new char[BUFSIZE];
-                int bytesRecvd = input.read(recvBuffer, 0, BUFSIZE - 1);
+                    /* RECEIVE BYTES */
+                    char[] recvBuffer = new char[BUFSIZE];
+                    int bytesRecvd = input.read(recvBuffer, 0, BUFSIZE - 1);
 
-                if (bytesRecvd < 0) {
-                    System.out.println("Error while receiving data from server");
-                    System.exit(0);
-                }
+                    if (bytesRecvd < 0) {
+                        System.out.println("Error while receiving data from server");
+                        System.exit(0);
+                    }
 
-                String receivedMessage = new String(recvBuffer, 0, bytesRecvd);
-                System.out.println(receivedMessage);
+                    String receivedMessage = new String(recvBuffer, 0, bytesRecvd);
+                    System.out.println(receivedMessage);
 
-                if (receivedMessage.startsWith("Goodbye")) {
-                    connected = false;
-                    System.out.println("Disconnecting from server");
+                    if (receivedMessage.startsWith("Goodbye")) {
+                        connected = false;
+                        System.out.println("Disconnecting from server");
 
+                    }
                 }
             }
-
+            else {
+                // Open test file
+                File file = new File("testcase.txt");
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String msg;
+                // For each line in the test file, send the message to the server and log the time taken in file "TCPLatency.csv" along with the first word of message sent
+                while ((msg = br.readLine()) != null) {
+                    long startTime = System.nanoTime();
+                    output.println(msg);
+                    // Receive response from server
+                    char[] recvBuffer = new char[BUFSIZE];
+                    int bytesRecvd = input.read(recvBuffer, 0, BUFSIZE - 1);
+                    if (bytesRecvd < 0) {
+                        System.out.println("Error while receiving data from server");
+                        System.exit(0);
+                    }
+                    long endTime = System.nanoTime();
+                    String receivedMessage = new String(recvBuffer, 0, bytesRecvd);
+                    // Log the time taken in file "TCPLatency.csv" along with the first word of message received
+                    try {
+                        FileWriter fw = new FileWriter("TCPLatency.csv", true);
+                        fw.write(msg.split(" ")[0] + "," + (endTime - startTime) + "\n");
+                        fw.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                br.close();
+            }
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
