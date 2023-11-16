@@ -18,7 +18,7 @@ public class RunTCP {
     }
 }
 
-public class TCPClient {
+class TCPClient {
     public void runClient() { 
         int BUFSIZE = 32;
         Socket socket = null;
@@ -74,7 +74,7 @@ public class TCPClient {
     }
 }
 
-public class TCPServer {
+class TCPServer {
 
     // lock
     private static ReentrantLock lock = null;

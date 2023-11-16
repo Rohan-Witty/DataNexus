@@ -93,7 +93,7 @@ class Terminate extends Thread {
  * RemoteCommand implements the Command interface and provides methods for
  * processing client requests remotely.
  */
-public class RemoteCommand extends UnicastRemoteObject implements Command {
+class RemoteCommand extends UnicastRemoteObject implements Command {
     private static ReentrantLock lock = null;
 
     public RemoteCommand() throws RemoteException {
@@ -297,6 +297,6 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
 /*
  * Command is the interface defining the remote method processRequest.
  */
-public interface Command extends Remote {
+interface Command extends Remote {
     public String processRequest(String msg) throws RemoteException;
 }
