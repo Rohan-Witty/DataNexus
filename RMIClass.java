@@ -6,11 +6,16 @@ import java.rmi.server.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.io.*;
 
+/* RMIClass is the main class that either starts the RMI server or client based on the command line arguments. */
+
 public class RMIClass {
     public static void main(String args[]) {
-        // Start the server or client based on the command line arguments
-        // If no arguments are provided, start the client
-        // If the argument "server" is provided, start the server
+        /*
+         * Start the server or client based on the command line arguments
+         * If no arguments are provided, start the client
+         * If the argument "server" is provided, start the server
+         */
+
         boolean isServer = args.length > 0 && args[0].equals("server");
         if (isServer) {
             startServer();
@@ -19,9 +24,12 @@ public class RMIClass {
         }
     }
 
+    /*
+     * Starts the RMI server by creating a registry and binding the "Command" stub.
+     */
     static void startServer() {
         try {
-            // Create a new instance of RemoteCommand
+            /* Create a new instance of RemoteCommand */
             Command stub = new RemoteCommand();
 
             int port = 1099; // default RMI registry port
@@ -35,6 +43,10 @@ public class RMIClass {
         }
     }
 
+    /*
+     * Starts the RMI client, looks up the "Command" stub, and processes user
+     * commands.
+     */
     static void startClient() {
         String host = null;
         try {
@@ -61,6 +73,9 @@ public class RMIClass {
     }
 }
 
+/*
+ * Terminate is a thread to terminate the server after a delay.
+ */
 class Terminate extends Thread {
 
     @Override
@@ -74,33 +89,47 @@ class Terminate extends Thread {
     }
 }
 
+/*
+ * RemoteCommand implements the Command interface and provides methods for
+ * processing client requests remotely.
+ */
 public class RemoteCommand extends UnicastRemoteObject implements Command {
     private static ReentrantLock lock = null;
+
     public RemoteCommand() throws RemoteException {
         super();
         lock = new ReentrantLock(true);
     }
 
+    /**
+     * Processes client requests and performs corresponding actions such as put,
+     * get, del, exit, store, and clean.
+     *
+     * @param msg The client request message.
+     * @return The response message after processing the request.
+     * @throws RemoteException
+     */
     public String processRequest(String msg) {
-        // Acquire the lock
+        /* Acquire the lock */
         lock.lock();
-        // Sleep for 2 seconds to simulate a long running process
+        /* Sleep for 2 seconds to simulate a long running process */
         // try {
-        //     Thread.sleep(2000);
+        // Thread.sleep(2000);
         // } catch (InterruptedException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
         String response = "";
         String[] parts = msg.split(" ");
         String req = parts[0];
 
         if (req.equals("put")) {
+            /* Code to add a new key-value pair to the database */
             if (parts.length == 3) {
                 String key = parts[1];
                 String value = parts[2];
 
                 try {
-                    // Open the file for reading as well as writing
+                    /* Open the file for reading as well as writing */
                     RandomAccessFile file = new RandomAccessFile("database.txt", "rw");
                     String line;
                     boolean found = false;
@@ -115,13 +144,13 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
                             break;
                         }
                     }
-                    // If the key was found, delete the old value
+                    /* If the key was found, delete the old value */
                     if (found) {
-                        // Delete the value
+                        /* Delete the value */
                         file.seek(file.getFilePointer() - line.length() - 1);
                         file.writeBytes(" ");
                     }
-                    // Append the new key-value pair to the end of the file
+                    /* Append the new key-value pair to the end of the file */
                     file.seek(file.length());
                     file.writeBytes(key + " " + value + "\n");
                     response = "Added new key-value pair";
@@ -135,8 +164,9 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
                 response = "Invalid request";
             }
         } else if (req.equals("get")) {
+            /* Code to retrieve the value for a given key from the database */
             try {
-                // Open the file for reading
+                /* Open the file for reading */
                 RandomAccessFile file = new RandomAccessFile("database.txt", "r");
                 String line;
                 boolean found = false;
@@ -162,8 +192,9 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
                 response = "Error while processing request";
             }
         } else if (req.equals("del")) {
+            /* Code to delete a key-value pair from the database */
             try {
-                // Open the file for reading as well as writing
+                /* Open the file for reading as well as writing */
                 RandomAccessFile file = new RandomAccessFile("database.txt", "rw");
                 String line;
                 boolean found = false;
@@ -179,9 +210,9 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
                     }
                 }
                 if (found) {
-                    // Update the value
+                    /* Update the value */
                     file.seek(file.getFilePointer() - line.length() - 1);
-                    // Mark the line as deleted
+                    /* Mark the line as deleted */
                     file.writeBytes(" ");
                     response = "Deleted key " + parts[1];
                 } else {
@@ -192,15 +223,17 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
+
         } else if (req.equals("exit")) {
+            /* Code to terminate the server */
             response = "Goodbye";
-            // Write code to terminate the server here
             Terminate terminateThread = new Terminate();
             terminateThread.start();
             return response;
         } else if (req.equals("store")) {
+            /* Code to retrieve and return a portion of the database (if needed) */
             try {
-                // Open the file for reading as well as writing
+                /* Open the file for reading as well as writing */
                 RandomAccessFile file = new RandomAccessFile("database.txt", "r");
                 String line;
                 int size = 0;
@@ -225,11 +258,13 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
             }
 
         } else if (req.equals("clean")) {
-            // Command to clear out all deleted lines by making a copy of the file while
-            // ommiting the deleted lines, deleting the original file,
-            // and renaming the copy to the original file name
+            /*
+             * Command to clear out all deleted lines by making a copy of the file while
+             * ommiting the deleted lines, deleting the original file,
+             * and renaming the copy to the original file name
+             */
             try {
-                // Open the file for reading as well as writing
+                /* Open the file for reading as well as writing */
                 RandomAccessFile file = new RandomAccessFile("database.txt", "r");
                 RandomAccessFile fileCopy = new RandomAccessFile("databaseCopy.txt", "rw");
                 String line;
@@ -253,12 +288,15 @@ public class RemoteCommand extends UnicastRemoteObject implements Command {
         } else {
             response = "Invalid request";
         }
-        // Release the lock
+        /* Release the lock */
         lock.unlock();
         return response;
     }
 }
 
+/*
+ * Command is the interface defining the remote method processRequest.
+ */
 public interface Command extends Remote {
     public String processRequest(String msg) throws RemoteException;
 }
