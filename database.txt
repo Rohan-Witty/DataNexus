@@ -1,2 +1,3 @@
 1 water
 0 katara
+2 aang

@@ -2,12 +2,84 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.locks.ReentrantLock;
 
+public class RunTCP {
+    public static void main(String[] args) {
+        // Start the server or client based on the command line arguments
+        // If no arguments are provided, start the client
+        // If the argument "server" is provided, start the server
+        boolean isServer = args.length > 0 && args[0].equals("server");
+        if (isServer) {
+            TCPServer server = new TCPServer();
+            server.runServer();
+        } else {
+            TCPClient client = new TCPClient();
+            client.runClient();
+        }
+    }
+}
+
+public class TCPClient {
+    public void runClient() { 
+        int BUFSIZE = 32;
+        Socket socket = null;
+
+        try {
+            /* CREATE A TCP SOCKET */
+            socket = new Socket("127.0.0.1", 12345); // Replace IP and port as needed
+
+            System.out.println("Client Socket Created");
+
+            /* GET SOCKET OUTPUT STREAM */
+            OutputStream out = socket.getOutputStream();
+            PrintWriter output = new PrintWriter(out, true);
+
+            /* GET SOCKET INPUT STREAM */
+            InputStream in = socket.getInputStream();
+            BufferedReader input = new BufferedReader(new InputStreamReader(in));
+
+            boolean connected = true;
+            while (connected) {
+                /* SEND DATA */
+                System.out.println("ENTER MESSAGE FOR SERVER with max 32 characters");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                String msg = reader.readLine();
+
+                output.println(msg);
+
+                System.out.println("Data Sent");
+
+                /* RECEIVE BYTES */
+                char[] recvBuffer = new char[BUFSIZE];
+                int bytesRecvd = input.read(recvBuffer, 0, BUFSIZE - 1);
+
+                if (bytesRecvd < 0) {
+                    System.out.println("Error while receiving data from server");
+                    System.exit(0);
+                }
+
+                String receivedMessage = new String(recvBuffer, 0, bytesRecvd);
+                System.out.println(receivedMessage);
+
+                if (receivedMessage.startsWith("Goodbye")) {
+                    connected = false;
+                    System.out.println("Disconnecting from server");
+
+                }
+            }
+
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
 public class TCPServer {
 
     // lock
     private static ReentrantLock lock = null;
 
-    public static void main(String[] args) {
+    public void runServer() {
         ServerSocket serverSocket = null;
 
         try {
@@ -53,8 +125,9 @@ class ClientHandler extends Thread {
 
             String msg;
             while ((msg = input.readLine()) != null) {
-                if (msg.equals(":exit")) {
+                if (msg.equals("exit")) {
                     System.out.println("Client disconnected: " + clientSocket);
+                    output.println("Goodbye");
                     break;
                 } else {
                     lock.lock();
@@ -235,6 +308,9 @@ class ClientHandler extends Thread {
                 e.printStackTrace();
                 response = "Error while processing request";
             }
+        }
+        else if (req.equals("exit")) {
+            response = "Goodbye";
         }
         else {
             response = "Invalid request";
