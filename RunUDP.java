@@ -12,8 +12,12 @@ public class RunUDP {
             UDPServer server = new UDPServer();
             server.startServer();
         } else {
+            String ipAddress = "127.0.0.1";
+            if (args.length > 0) {
+                ipAddress = args[0];
+            }
             UDPClient client = new UDPClient();
-            client.startClient();
+            client.startClient(ipAddress);
         }
     }
 }
@@ -39,6 +43,12 @@ class UDPServer {
                 serverSocket.receive(packet);
                 DatagramHandler handler = new DatagramHandler(serverSocket, packet, lock);
                 handler.start();
+                // If the client sends the exit command, close the server
+                String msg = new String(packet.getData(), 0, packet.getLength());
+                if (msg.equals("exit")) {
+                    connected = false;
+                    break;
+                }
             }
         }
 
@@ -235,10 +245,10 @@ class DatagramHandler extends Thread {
                 String line;
                 int size = 0;
                 while ((line = file.readLine()) != null) {
-                    if (line.startsWith(" ")) {
+                    if (line.startsWith(" ") || line.length() == 0) {
                         continue;
                     }
-
+                    line += "\n";
                     if (line.length() + size < 65000) {
                         size += line.length();
                         response += line;
@@ -281,9 +291,9 @@ class DatagramHandler extends Thread {
                 response = "Error while processing request";
             }
         }
-        else if (req.equals("Goodbye")) {
-            response = "Closing connection";
-        }
+        // else if (req.equals("Goodbye")) {
+        //     response = "Closing connection";
+        // }
         else {
             response = "Invalid request";
         }
@@ -295,12 +305,11 @@ class DatagramHandler extends Thread {
 class UDPClient {
     public static boolean connected = true;
 
-    public void startClient() {
-
+    public void startClient(String ipAddress) {
         try {
             // Create a datagram socket, look for the first available port
             DatagramSocket socket = new DatagramSocket(54321);
-            InetAddress serverAddress = InetAddress.getByName("localhost");
+            InetAddress serverAddress = InetAddress.getByName(ipAddress);
             int serverPort = 12345;
             // Start a thread to receive messages
             Receiver receiver = new Receiver(socket);
@@ -354,9 +363,9 @@ class Receiver extends Thread {
                 }
             }
             // Send a datagram packet from this socket
-            DatagramPacket packet = new DatagramPacket("Goodbye".getBytes(), "Goodbye".length(),
-                    InetAddress.getByName("localhost"), 12345);
-            socket.send(packet);
+            // DatagramPacket packet = new DatagramPacket("Goodbye".getBytes(), "Goodbye".length(),
+            //         InetAddress.getByName("localhost"), 12345);
+            // socket.send(packet);
 
         } catch (Exception e) {
             e.printStackTrace();

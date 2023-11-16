@@ -20,7 +20,9 @@ public class RunRMI {
         if (isServer) {
             startServer();
         } else {
-            startClient();
+            String host = args.length > 0 ? args[0] : null;
+            
+            startClient(host);
         }
     }
 
@@ -47,8 +49,7 @@ public class RunRMI {
      * Starts the RMI client, looks up the "Command" stub, and processes user
      * commands.
      */
-    static void startClient() {
-        String host = null;
+    static void startClient(String host) {
         try {
             Registry registry = LocateRegistry.getRegistry(host);
             Command stub = (Command) registry.lookup("Command");
@@ -238,10 +239,10 @@ class RemoteCommand extends UnicastRemoteObject implements Command {
                 String line;
                 int size = 0;
                 while ((line = file.readLine()) != null) {
-                    if (line.startsWith(" ")) {
+                    if (line.startsWith(" ") || line.length() == 0) {
                         continue;
                     }
-
+                    line += "\n";
                     if (line.length() + size < 65000) {
                         size += line.length();
                         response += line;

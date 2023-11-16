@@ -296,10 +296,10 @@ class ClientHandler extends Thread {
                 String line;
                 int size = 0;
                 while ((line = file.readLine()) != null) {
-                    if (line.startsWith(" ")) {
+                    if (line.startsWith(" ") || line.equals("")) {
                         continue;
                     }
-
+                    line += "\n";
                     if (line.length() + size < 65000) {
                         size += line.length();
                         response += line;
