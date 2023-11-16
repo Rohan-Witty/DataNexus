@@ -304,7 +304,7 @@ class DatagramHandler extends Thread {
 
 class UDPClient {
     public static boolean connected = true;
-    public boolean test_case = true;
+    public boolean test_case = false;
     // Array of start times
     public static long[] start_times = new long[1001];
     public static long[] end_times = new long[1001];

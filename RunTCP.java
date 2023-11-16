@@ -88,13 +88,13 @@ class TCPClient {
 
                     }
                 }
-            }
-            else {
+            } else {
                 // Open test file
                 File file = new File("testcase.txt");
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String msg;
-                // For each line in the test file, send the message to the server and log the time taken in file "TCPLatency.csv" along with the first word of message sent
+                // For each line in the test file, send the message to the server and log the
+                // time taken in file "TCPLatency.csv" along with the first word of message sent
                 while ((msg = br.readLine()) != null) {
                     long startTime = System.nanoTime();
                     output.println(msg);
@@ -107,7 +107,8 @@ class TCPClient {
                     }
                     long endTime = System.nanoTime();
                     String receivedMessage = new String(recvBuffer, 0, bytesRecvd);
-                    // Log the time taken in file "TCPLatency.csv" along with the first word of message received
+                    // Log the time taken in file "TCPLatency.csv" along with the first word of
+                    // message received
                     try {
                         FileWriter fw = new FileWriter("TCPLatency.csv", true);
                         fw.write(msg.split(" ")[0] + "," + (endTime - startTime) + "\n");
@@ -170,6 +171,7 @@ class ClientHandler extends Thread {
     private final Socket clientSocket;
     /* lock */
     private static ReentrantLock lock = null;
+    private static boolean running = true;
 
     public ClientHandler(Socket socket, ReentrantLock lock) {
         this.clientSocket = socket;
@@ -183,10 +185,10 @@ class ClientHandler extends Thread {
             PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
 
             String msg;
-            while ((msg = input.readLine()) != null) {
+            while ((msg = input.readLine()) != null && running) {
                 if (msg.equals("exit")) {
                     System.out.println("Client disconnected: " + clientSocket);
-                    output.println("Goodbye");
+                    running = false;
                     break;
                 } else {
                     lock.lock();
@@ -200,9 +202,16 @@ class ClientHandler extends Thread {
                     }
                 }
             }
-
+            output.println("Goodbye");
             clientSocket.close();
+            // Wait 10 seconds before terminating the server, closing any clients that send a request in that time
+            Thread.sleep(10000);
+            System.exit(0);
+
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // Auto-generated catch block
             e.printStackTrace();
         }
     }
