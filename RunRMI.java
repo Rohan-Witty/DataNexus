@@ -20,7 +20,7 @@ public class RunRMI {
         if (isServer) {
             startServer();
         } else {
-            String host = args.length > 0 ? args[0] : null;
+            String host = args.length > 0 ? args[0] : "localhost";
             // startTestClient(host);
             startClient(host);
         }
