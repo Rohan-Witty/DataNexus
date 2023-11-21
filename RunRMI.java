@@ -35,6 +35,7 @@ public class RunRMI {
             Command stub = new RemoteCommand();
 
             int port = 1099; // default RMI registry port
+            System.setProperty("java.rmi.server.hostname", "192.168.x.x");
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("Command", stub);
             System.out.println("Server ready");
@@ -51,7 +52,7 @@ public class RunRMI {
      */
     static void startClient(String host) {
         try {
-            Registry registry = LocateRegistry.getRegistry(host);
+            Registry registry = LocateRegistry.getRegistry("192.168.x.x", 1099);
             Command stub = (Command) registry.lookup("Command");
 
             boolean connected = true;
