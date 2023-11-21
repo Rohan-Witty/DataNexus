@@ -203,6 +203,7 @@ class ClientHandler extends Thread {
                 }
             }
             output.println("Goodbye");
+            System.out.println("Sent response: Goodbye");
             clientSocket.close();
             // Wait 10 seconds before terminating the server, closing any clients that send a request in that time
             Thread.sleep(10000);
