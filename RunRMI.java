@@ -20,7 +20,7 @@ public class RunRMI {
         if (isServer) {
             startServer();
         } else {
-            String host = args.length > 0 ? args[0] : null;
+            String host = args.length > 0 ? args[0] : "localhost";
             // startTestClient(host);
             startClient(host);
         }
@@ -35,6 +35,7 @@ public class RunRMI {
             Command stub = new RemoteCommand();
 
             int port = 1099; // default RMI registry port
+            System.setProperty("java.rmi.server.hostname", "172.17.74.181");
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("Command", stub);
             System.out.println("Server ready");
@@ -51,9 +52,9 @@ public class RunRMI {
      */
     static void startClient(String host) {
         try {
-            Registry registry = LocateRegistry.getRegistry(host);
-            Command stub = (Command) registry.lookup("Command");
-
+            // Registry registry = LocateRegistry.getRegistry("172.17.74.181", 1099);
+            // Command stub = (Command) registry.lookup("Command");
+            Command stub = (Command) Naming.lookup("rmi://"+host+":1099/Command");
             boolean connected = true;
             while (connected) {
                 /* SEND DATA */
